@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yanis — BTS SIO SLAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── VARIABLES ─────────────────────────────────────────── */
+    :root {
+      --bg:       #f8f7f4;
+      --surface:  #ffffff;
+      --border:   #e4e2de;
+      --text:     #1a1917;
+      --muted:    #888580;
+      --accent:   #1a1917;
+      --tag-bg:   #eeece9;
+    }
+
+    /* ─── RESET & BASE ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── TYPOGRAPHIE ───────────────────────────────────────── */
+    h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 400; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    /* ─── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(248, 247, 244, 0.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ─── LAYOUT ────────────────────────────────────────────── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 6rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── HERO ──────────────────────────────────────────────── */
+    #hero {
+      padding: 12rem 0 6rem;
+      border-top: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.6rem;
+      border: 1.5px solid var(--text);
+      background: transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .hero-cta:hover { background: var(--text); color: var(--bg); }
+
+    .hero-cta svg { width: 14px; height: 14px; }
+
+    /* ─── À PROPOS ──────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .about-meta-item label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .about-meta-item p {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #444;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    /* ─── COMPÉTENCES ───────────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+ 
+    .skill-card {
+      padding: 1.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+ 
+    .skill-card-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+ 
+    .skill-card-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+ 
+    .skill-card-context {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      background: var(--tag-bg);
+      color: var(--text);
+    }
+
+    /* ─── PROJETS ───────────────────────────────────────────── */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ── CARD PROJET : copie ce bloc pour ajouter un projet ─── *
+     *                                                           *
+     *   <article class="project-card">                         *
+     *     <div class="project-card-header">                    *
+     *       <div>                                              *
+     *         <h3 class="project-name">Nom du projet</h3>     *
+     *         <span class="project-year">2024</span>           *
+     *       </div>                                             *
+     *       <div class="project-tags">                         *
+     *         <span class="tag">PHP</span>                     *
+     *         <span class="tag">MySQL</span>                   *
+     *       </div>                                             *
+     *     </div>                                               *
+     *     <p class="project-desc">                             *
+     *       Description courte du projet en 1-2 phrases.      *
+     *     </p>                                                 *
+     *     <a href="#" class="project-link">Voir le projet →</a>*
+     *   </article>                                             *
+     *                                                          *
+     * ────────────────────────────────────────────────────── */
+
+    .project-card {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-card:first-child { border-top: 1px solid var(--border); }
+
+    .project-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .project-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+
+    .project-year {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      background: var(--tag-bg);
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+
+    .project-desc {
+      font-size: 0.92rem;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+
+    .project-link {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--text);
+      padding-bottom: 1px;
+      transition: opacity 0.2s;
+    }
+
+    .project-link:hover { opacity: 0.4; }
+
+    /* ─── EXPÉRIENCE PRO ────────────────────────────────────── */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 2rem;
+      padding: 2.2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:first-child { border-top: 1px solid var(--border); }
+
+    .exp-meta {
+      padding-top: 0.15rem;
+    }
+
+    .exp-period {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .exp-type {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      background: var(--tag-bg);
+      display: inline-block;
+    }
+
+    .exp-content {}
+
+    .exp-role {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-company {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.75;
+      margin-bottom: 0.9rem;
+    }
+
+    .exp-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .exp-item { grid-template-columns: 1fr; gap: 0.8rem; }
+    }
+
+    /* ─── VEILLE — FRISE CHRONOLOGIQUE ─────────────────────── */
+    .veille-intro {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Ligne verticale ────────────────────────────────────
+       Colonne meta = 160px, gap = 2rem (32px)
+       Centre du gap = 160 + 16 = 176px → valeur de référence
+    ─────────────────────────────────────────────────────── */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 176px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    /* ── Entrée ─────────────────────────────────────────── */
+    .tl-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 2rem;
+      padding: 2.2rem 0;
+      position: relative;
+    }
+
+    /* Dot : positionné sur .tl-item (même parent que la ligne),
+       même left que .timeline::before → alignement garanti     */
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: 176px;
+      top: 2.55rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--text);
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    /* ── Colonne gauche ─────────────────────────────────── */
+    .tl-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding-top: 0.25rem;
+      gap: 0.4rem;
+    }
+
+    .tl-period {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    .tl-domain {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.5rem;
+      background: var(--tag-bg);
+      color: var(--text);
+    }
+
+    /* ── Colonne droite ─────────────────────────────────── */
+    .tl-content {
+      padding-top: 0.1rem;
+    }
+
+    .tl-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+      line-height: 1.35;
+    }
+
+    .tl-summary {
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      max-width: 540px;
+    }
+
+    .tl-source {
+      font-size: 0.8rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .tl-source:hover { border-color: var(--text); }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .timeline::before {
+        left: 0;
+      }
+
+      .tl-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding-left: 1.5rem;
+      }
+
+      .tl-item::before {
+        left: 0;
+        top: 2.6rem;
+        transform: translateX(-50%);
+      }
+
+      .tl-meta {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.7rem;
+      }
+
+      .tl-period { text-align: left; }
+    }
+
+    /* ─── CV ────────────────────────────────────────────────── */
+    #cv {
+      padding: 4rem 0;
+    }
+
+    .cv-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .cv-text h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cv-text p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 1rem 2rem;
+      background: var(--text);
+      color: var(--bg);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-download:hover { opacity: 0.75; }
+
+    .btn-download svg { width: 16px; height: 16px; }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .container { padding: 0 1.25rem; }
+      #hero { padding: 9rem 0 4rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .veille-grid { grid-template-columns: 1fr; }
+      .cv-block { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────────────── -->
+  <nav>
+    <a href="#hero" class="nav-logo">Yanis.</a>
+    <ul class="nav-links">
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#skills">Compétences</a></li>
+      <li><a href="#experience">Expérience</a></li>
+      <li><a href="#projects">Projets</a></li>
+      <li><a href="#veille">Veille</a></li>
+      <li><a href="#cv">CV</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="container">
+      <p class="hero-eyebrow">BTS SIO — Option SLAM</p>
+      <h1 class="hero-name">Yanis<br /><em>Développeur & IA</em></h1>
+      <p class="hero-desc">
+        Étudiant en développement logiciel et applicatif, avec un intérêt marqué pour l'intelligence artificielle et la data.
+      </p>
+      <a href="#projects" class="hero-cta">
+        Voir mes projets
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── À PROPOS ──────────────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label">À propos</p>
+      <div class="about-grid">
+        <div class="about-meta">
+          <div class="about-meta-item">
+            <label>Formation</label>
+            <p>BTS SIO — SLAM</p>
+          </div>
+          <div class="about-meta-item">
+            <label>Localisation</label>
+            <p>Grigny, France</p>
+          </div>
+          <div class="about-meta-item">
+            <label>Objectif</label>
+            <p>Licence IA/Data en alternance</p>
+          </div>
+          <div class="about-meta-item">
+            <label>Disponibilité</label>
+            <p>Septembre 2026</p>
+          </div>
+        </div>
+        <div class="about-text">
+          <p>
+            Étudiant en deuxième année de BTS Services Informatiques aux Organisations, spécialité Solutions Logicielles et Applications Métiers. Je développe des applications web et desktop en m'appuyant sur PHP, Java , SQL et les bases du Machine Learning.
+          </p>
+          <p>
+            Mon objectif est d'intégrer une Licence professionnelle orientée Intelligence Artificielle/Data pour approfondir mes compétences en modélisation et en traitement de données, dans le cadre d'une alternance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COMPÉTENCES ───────────────────────────────────────── -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label">Compétences</p>
+      <div class="skills-grid">
+ 
+        <div class="skill-card">
+          <p class="skill-card-title">SQL</p>
+          <p class="skill-card-desc">Requêtes complexes, modélisation relationnelle, analyse et structuration de données métier.</p>
+          <span class="skill-card-context">Data & Analyse</span>
+        </div>
+ 
+        <div class="skill-card">
+          <p class="skill-card-title">PHP</p>
+          <p class="skill-card-desc">Développement back-end, gestion de sessions, interaction base de données.</p>
+          <span class="skill-card-context">Back-end</span>
+        </div>
+ 
+        <div class="skill-card">
+          <p class="skill-card-title">SQL</p>
+          <p class="skill-card-desc">Modélisation relationnelle, requêtes complexes, jointures, procédures.</p>
+          <span class="skill-card-context">Base de données</span>
+        </div>
+ 
+        <div class="skill-card">
+          <p class="skill-card-title">Machine Learning / IA</p>
+          <p class="skill-card-desc">Modèles supervisés, traitement de données, exploration avec Python.</p>
+          <span class="skill-card-context">IA & Data</span>
+        </div>
+ 
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EXPÉRIENCE PROFESSIONNELLE ───────────────────────── -->
+  <section id="experience">
+    <div class="container">
+      <p class="section-label">Expérience professionnelle</p>
+      <div class="exp-list">
+
+        <!--
+          ╔══════════════════════════════════════════════════════╗
+          ║  AJOUTER UNE EXPÉRIENCE                              ║
+          ╚══════════════════════════════════════════════════════╝
+
+          <div class="exp-item">
+            <div class="exp-meta">
+              <span class="exp-period">Juin — Juil. 2024</span>
+              <span class="exp-type">Stage</span>          ← ou "Alternance", "CDI", etc.
+            </div>
+            <div class="exp-content">
+              <h3 class="exp-role">Intitulé du poste</h3>
+              <p class="exp-company">Nom de l'entreprise · Ville</p>
+              <p class="exp-desc">
+                Ce que tu as fait : missions, outils, résultats concrets.
+              </p>
+              <div class="exp-tags">
+                <span class="tag">PHP</span>
+                <span class="tag">SQL</span>
+              </div>
+            </div>
+          </div>
+        -->
+
+
+
+        <div class="exp-item">
+          <div class="exp-meta">
+            <span class="exp-period">08/25-Actuel</span>
+            <span class="exp-type">CDI étudiant</span>
+          </div>
+          <div class="exp-content">
+            <h3 class="exp-role">Animateur Polyvalent</h3>
+            <p class="exp-company">GulliParc · Sainte-Geneviève-des-Bois</p>
+            <p class="exp-desc">
+              Gestion de flux: Encadrement de groupes, accueil et restauration. 
+              Autonomie sur l'organisation des anniversaires et la satisfaction client directe.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="exp-item">
+          <div class="exp-meta">
+            <span class="exp-period">11/25-12/25</span>
+            <span class="exp-type">Stage</span>
+          </div>
+          <div class="exp-content">
+            <h3 class="exp-role">Support IT & Administration</h3>
+            <p class="exp-company">Nexus Unifi · Bagnolet</p>
+            <p class="exp-desc">
+              Création et maintenance de sites web via WordPress,
+              Démarche téléphonique et négociation commerciale,
+              Utilisation d'outils d'IA pour automatiser des processus administratifs,
+              Optimisation du contenu pour le référencement.
+            </p>
+            <div class="exp-tags">
+              <span class="tag">WordPress</span>
+              <span class="tag">LLMs</span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="exp-item">
+          <div class="exp-meta">
+            <span class="exp-period">06/25-07/25</span>
+            <span class="exp-type">Stage</span>
+          </div>
+          <div class="exp-content">
+            <h3 class="exp-role">Support IT & Administration</h3>
+            <p class="exp-company">Nexus Unifi · Bagnolet</p>
+            <p class="exp-desc">
+              Création et maintenance de sites web via WordPress,
+              Démarche téléphonique et négociation commerciale,
+            </p>
+            <div class="exp-tags">
+              <span class="tag">WordPress</span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="exp-item">
+          <div class="exp-meta">
+            <span class="exp-period">03/18-04/18</span>
+            <span class="exp-type">Stage</span>
+          </div>
+          <div class="exp-content">
+            <h3 class="exp-role">Stage d'Observation</h3>
+            <p class="exp-company">Stellantis · Poissy</p>
+            <p class="exp-desc">
+              Analyse des processus métier dans les services Sinistres, Marketing et Location Longue Durée (LLD). Compréhension de la structure des données liées au parc automobile et aux contrats de leasing.
+            </p>
+          </div>
+        </div>        
+
+
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ─── PROJETS ───────────────────────────────────────────── -->
+  <section id="projects">
+    <div class="container">
+      <p class="section-label">Projets</p>
+      <div class="projects-list">
+
+        <!--
+          ╔══════════════════════════════════════════════════════╗
+          ║  AJOUTER UN PROJET :                                 ║
+          ╚══════════════════════════════════════════════════════╝
+
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">Nom du projet</h3>
+                <span class="project-year">2024</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">PHP</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">HTML/CSS</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              Description courte du projet en 1-2 phrases. Ce qu'il fait et pourquoi il a été conçu.
+            </p>
+            <a href="#" class="project-link">Voir le projet →</a>
+          </article>
+        -->
+
+
+          <!--
+        <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">Yaconcess</h3>
+                <span class="project-year">2024</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">PHP</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">HTML/CSS</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              Site en connexion avec une base de donnée sur le thème de location de voiture.
+            </p>
+            <a href="Yaconcess/index.html" class="project-link">Voir le projet →</a>
+          </article>
+          -->
+
+
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">Psg Archive</h3>
+                <span class="project-year">2026</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Java</span>
+                <span class="tag">Spring</span>
+                <span class="tag">MySql</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              C’est une application desktop développée en Java avec Spring Boot permettant de centraliser et d'administrer l'historique des joueurs du PSG dans une base de données MySQL.Le logiciel intègre un système d’authentification avec gestion de rôles (Admin/User), un moteur de recherche multicritères et une interface moderne en Dark Mode.Le projet s'appuie sur une architecture robuste utilisant Spring Data JPA pour la persistance des données et Maven pour la gestion des dépendances.
+            </p>
+            <a href="https://yanis252.github.io/psg-archive/" class="project-link">Voir le projet →</a>
+          </article>
+
+
+          <!--
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">Prédiction du taux de désabonnement des clients bancaires</h3>
+                <span class="project-year">2026</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">ML</span>
+                <span class="tag">scikit-learn</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              Modèle de classification binaire entraîné sur 10 000 clients bancaires pour prédire le churn. Pipeline complet : preprocessing (encodage, normalisation), comparaison Régression Logistique vs Random Forest, évaluation par ROC-AUC (~0.86). Variables les plus prédictives : âge, nombre de produits et statut d'activité du client.
+            </p>
+            <a href="https://yanis252.github.io/ML/" class="project-link">Voir le projet →</a>
+          </article>
+        -->
+
+
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">RESA VVA</h3>
+                <span class="project-year">2026</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">PHP</span>
+                <span class="tag">HTML/CSS</span>
+                <span class="tag">MySQL</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              L’application RESA_VVA a été développée dans le cadre d’un projet pédagogique du BTS SIO, option SLAM.
+              Un cahier des chargesnous a été fourni par l’enseignant, définissait les fonctionnalités attendues pour
+              l’application de gestion des hébergements et de réservations.
+            </p>
+
+            <a href="Reservation/index.php" class="project-link">Voir le projet →</a>
+          </article>
+
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <h3 class="project-name">Site NexusUnidoc</h3>
+                <span class="project-year">2025</span>
+              </div>
+              <div class="project-tags">
+                <span class="tag">Word</span>
+                <span class="tag">Api Formulaire</span>
+                <span class="tag">HTML</span>
+              </div>
+            </div>
+            <p class="project-desc">
+              Amélioration site web, création de pages et de blog, tous ca via WordPress.
+            </p>
+            <a href="https://nexusunidoc.in/" class="project-link">Site NexusUnidoc →</a>
+          </article>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ─── VEILLE TECHNOLOGIQUE ──────────────────────────────── -->
+  <section id="veille">
+    <div class="container">
+      <p class="section-label">Veille technologique</p>
+      <p class="veille-intro">
+        Évolution des agents IA 
+      </p>
+
+      <div class="timeline">
+
+        <!-- INTRO -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">Contexte</span>
+            <span class="tl-domain">IA & LLM</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">Qu'est-ce qu'un agent IA ?</h3>
+            <p class="tl-summary">
+              Un agent IA est un système autonome alimenté par un LLM capable de planifier, mémoriser et utiliser des outils pour atteindre un objectif — sans intervention humaine constante. Contrairement à un chatbot qui répond, l'agent agit : il peut ouvrir un navigateur, consulter une source, synthétiser les données et envoyer une alerte de lui-même.
+            </p>
+            <a href="https://www.firecrawl.dev/blog/best-open-source-agent-frameworks" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- G1 -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">1950 – 1990</span>
+            <span class="tl-domain">Histoire de l'IA</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">G1 — L'IA symbolique et les systèmes experts</h3>
+            <p class="tl-summary">
+              Les premiers agents reposaient sur des règles "si/alors" codées manuellement, sans aucune capacité d'apprentissage. Le programme MYCIN (1972) diagnostiquait des maladies infectieuses via 600 règles médicales figées — hors de ce domaine, le système était inutile.
+            </p>
+            <a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_expert" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- G2 -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">1990 – 2020</span>
+            <span class="tl-domain">Machine Learning</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">G2 — L'apprentissage par renforcement</h3>
+            <p class="tl-summary">
+              Les agents apprennent par essai/erreur en maximisant une récompense dans un environnement simulé. AlphaGo (DeepMind, 2016) a battu le champion du monde de Go — mais restait incapable d'effectuer la moindre autre tâche. Performant, mais enfermé dans un domaine unique.
+            </p>
+            <a href="https://deepmind.google/research/breakthroughs/alphago/" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- ReAct -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">Oct. 2022</span>
+            <span class="tl-domain">LLM & Agents</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">G3 — ReAct : raisonnement + action en alternance</h3>
+            <p class="tl-summary">
+              Le paradigme ReAct (Google, 2022) permet à un LLM de générer en alternance des traces de raisonnement verbal et des actions concrètes. L'agent cherche une info, raisonne sur ce qu'il trouve, corrige sa trajectoire, puis répond — réduisant drastiquement les hallucinations par rapport à un LLM classique.
+            </p>
+            <a href="https://arxiv.org/abs/2210.03629" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- Frameworks -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">2022 – 2025</span>
+            <span class="tl-domain">Frameworks</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">L'écosystème des frameworks agents</h3>
+            <p class="tl-summary">
+              LangChain (2022) a ouvert la voie à l'orchestration LLM. AutoGen (Microsoft, 2023) a introduit la collaboration multi-agents. CrewAI (2024) y a ajouté des rôles métier définis. LangGraph (2024) structure les workflows en graphes d'états cycliques. L'OpenAI Agents SDK (mars 2025) simplifie l'ensemble avec un framework natif et léger.
+            </p>
+            <a href="https://langfuse.com/blog/2025-03-19-ai-agent-comparison" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- MCP -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">Nov. 2024</span>
+            <span class="tl-domain">Standardisation</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">MCP — Le protocole universel agent-outil</h3>
+            <p class="tl-summary">
+              Le Model Context Protocol (Anthropic, nov. 2024) est le "port USB-C de l'IA" : un standard ouvert qui connecte n'importe quel agent à n'importe quelle source de données sans intégration sur mesure. En mars 2025, OpenAI l'adopte. En avril, Google DeepMind suit. En décembre, le standard est cédé à la Linux Foundation.
+            </p>
+            <a href="https://www.anthropic.com/news/model-context-protocol" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- Tendances -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">2025 – 2026</span>
+            <span class="tl-domain">Tendances</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">Agents long horizon et consolidation du marché</h3>
+            <p class="tl-summary">
+              Le marché converge vers des agents capables de travailler en autonomie plusieurs heures : Devin code une application entière sans supervision. Côté frameworks, Microsoft fusionne AutoGen et Semantic Kernel. Le marché des agents atteint 7,84 Md$ en 2025, avec une projection à 52,62 Md$ d'ici 2030.
+            </p>
+            <a href="https://www.firecrawl.dev/blog/best-open-source-agent-frameworks" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+        <!-- Limites -->
+        <div class="tl-item">
+          <div class="tl-meta">
+            <span class="tl-period">2024 – 2026</span>
+            <span class="tl-domain">Sécurité</span>
+          </div>
+          <div class="tl-content">
+            <h3 class="tl-title">Hallucination, coût et sécurité des agents</h3>
+            <p class="tl-summary">
+              Les agents restent vulnérables aux hallucinations et aux attaques de "tool poisoning" — des instructions malveillantes cachées dans un outil peuvent forcer l'agent à exfiltrer des données sensibles. À cela s'ajoute un coût token élevé qui freine l'adoption en entreprise. La supervision humaine reste indispensable.
+            </p>
+            <a href="https://thenewstack.io/why-the-model-context-protocol-won/" class="tl-source">Source →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <!-- ─── CV ────────────────────────────────────────────────── -->
+  <section id="cv">
+    <div class="container">
+      <div class="cv-block">
+        <div class="cv-text">
+          <h2>Mon CV</h2>
+          <p>Disponible en téléchargement au format PDF.</p>
+        </div>
+        <!--
+          📝 Remplace "cv-yanis.pdf" par le chemin réel de ton CV.
+          Place ton fichier PDF dans le même dossier que ce fichier HTML.
+        -->
+        <a href="cv-yanis.pdf" download class="btn-download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Télécharger le CV
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-copy">© 2025 Yanis — BTS SIO SLAM</p>
+        <ul class="footer-links">
+          <!-- 📝 Mets tes vrais liens -->
+          <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+          <li><a href="https://linkedin.com/" target="_blank">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
